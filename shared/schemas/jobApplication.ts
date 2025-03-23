@@ -8,7 +8,7 @@ export const createJobApplicationSchema = z.object({
     .enum(["wishlist", "applied", "interviewing", "offer", "rejected"])
     .optional(),
   job_posting_url: z.string().url().optional(),
-  applied_date: z.string().optional(), // or z.coerce.date()
+  applied_date: z.coerce.date().optional(),
   notes: z.string().optional(),
 });
 

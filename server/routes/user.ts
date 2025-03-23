@@ -1,5 +1,4 @@
-import express from "express";
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { z } from "zod";
 import { createUser, getUserById } from "../models/user";
 import { createUserSchema, CreateUserInput } from "../../shared/schemas/user";
