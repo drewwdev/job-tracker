@@ -33,10 +33,17 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   const userId = Number(req.params.id);
 
+  if (isNaN(userId)) {
+    res.status(400).json({ error: "Invalid user ID" });
+    return;
+  }
+
   try {
     const user = await getUserById(userId);
-    if (!user) res.status(404).json({ error: "User not found" });
-    return;
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
 
     res.json(user);
   } catch (err) {
