@@ -31,12 +31,25 @@ async function createUser(userData: User): Promise<number> {
   }
 }
 
-async function updateUser(userId: number, userData: User) {
-  const { email, username, password, provider, provider_id } = userData;
-  await db.query(
-    "UPDATE users SET email = $1, username = $2, password_hash = $3, provider = $4, provider_id = $5 WHERE id = $6",
-    [email, username, password, provider, provider_id, userId]
+async function updateUser(userId: number, userData: Partial<User>) {
+  const keys = Object.keys(userData) as (keyof User)[];
+  if (keys.length === 0) return null;
+
+  const setClause = keys
+    .map((key, index) => {
+      const dbField = key === "password" ? "password_hash" : key;
+      return `${dbField} = $${index + 1}`;
+    })
+    .join(", ");
+
+  const values = keys.map((key) => userData[key]);
+
+  const result = await db.query(
+    `UPDATE users SET ${setClause} WHERE id = $${keys.length + 1} RETURNING *`,
+    [...values, userId]
   );
+
+  return result.rows[0];
 }
 
 async function deleteUser(userId: number) {
