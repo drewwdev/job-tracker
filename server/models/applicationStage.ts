@@ -29,4 +29,19 @@ async function createApplicationStage(
   }
 }
 
-export { createApplicationStage };
+async function getApplicationStageById(
+  applicationStageId: number
+): Promise<ApplicationStage | null> {
+  const result = await db.query(
+    "SELECT * FROM application_stages WHERE id = $1",
+    [applicationStageId]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  return result.rows[0];
+}
+
+export { createApplicationStage, getApplicationStageById };
