@@ -8,6 +8,7 @@ import {
   createJobApplication,
   getJobApplicationById,
   updateJobApplication,
+  deleteJobApplication,
 } from "../models/jobApplication";
 
 const router = express.Router();
@@ -78,6 +79,26 @@ router.put("/:id", async (req: Request, res: Response): Promise<void> => {
     res.json(updatedJobApplication);
   } catch (err) {
     console.error("❌ PUT /job-applications/:id error:", err);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+// DELETE /job-applications/:id – Delete a job application by ID
+router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
+  const jobApplicationId = Number(req.params.id);
+  if (isNaN(jobApplicationId)) {
+    res.status(400).json({ error: "Invalid ID" });
+    return;
+  }
+  try {
+    const deletedJobApplication = await deleteJobApplication(jobApplicationId);
+    if (!deletedJobApplication) {
+      res.status(404).json({ error: "Job application not found" });
+      return;
+    }
+    res.json(deletedJobApplication);
+  } catch (err) {
+    console.error("❌ DELETE /job-applications/:id error:", err);
     res.status(500).json({ error: "Something went wrong" });
   }
 });

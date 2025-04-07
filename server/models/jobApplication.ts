@@ -104,4 +104,25 @@ async function updateJobApplication(
   }
 }
 
-export { getJobApplicationById, createJobApplication, updateJobApplication };
+async function deleteJobApplication(jobApplicationId: number) {
+  try {
+    const result = await db.query(
+      "DELETE FROM job_applications WHERE id = $1 RETURNING *",
+      [jobApplicationId]
+    );
+    if (result.rows.length === 0) {
+      return null; // No job application found with the given ID
+    }
+    return result.rows[0];
+  } catch (err: any) {
+    console.error("🔥 DB error:", err);
+    throw new Error("Failed to delete job application");
+  }
+}
+
+export {
+  getJobApplicationById,
+  createJobApplication,
+  updateJobApplication,
+  deleteJobApplication,
+};
