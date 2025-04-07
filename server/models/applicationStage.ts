@@ -81,8 +81,24 @@ async function updateApplicationStage(
   return result.rows[0];
 }
 
+async function deleteApplicationStage(
+  applicationStageId: number
+): Promise<boolean> {
+  const result = await db.query(
+    "DELETE FROM application_stages WHERE id = $1",
+    [applicationStageId]
+  );
+
+  if (!result || typeof result.rowCount !== "number") {
+    throw new Error("Unexpected DB response");
+  }
+
+  return result.rowCount > 0;
+}
+
 export {
   createApplicationStage,
   getApplicationStageById,
   updateApplicationStage,
+  deleteApplicationStage,
 };

@@ -4,6 +4,7 @@ import {
   createApplicationStage,
   getApplicationStageById,
   updateApplicationStage,
+  deleteApplicationStage,
 } from "../models/applicationStage";
 import {
   createApplicationStageSchema,
@@ -108,6 +109,26 @@ router.patch("/:id", async (req: Request, res: Response): Promise<void> => {
       res.status(409).json({ error: "Application stage name already in use" });
       return;
     }
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
+  const applicationStageId = parseInt(req.params.id, 10);
+  if (isNaN(applicationStageId)) {
+    res.status(400).json({ error: "Invalid application stage ID" });
+    return;
+  }
+  try {
+    const deletedApplicationStage = await deleteApplicationStage(
+      applicationStageId
+    );
+    if (!deletedApplicationStage) {
+      res.status(404).json({ error: "Application stage not found" });
+      return;
+    }
+    res.status(200).json({ message: "Application stage deleted successfully" });
+  } catch (err: any) {
     res.status(500).json({ error: "Something went wrong" });
   }
 });
