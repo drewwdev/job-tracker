@@ -57,4 +57,51 @@ async function createJobApplication(
   }
 }
 
-export { getJobApplicationById, createJobApplication };
+async function updateJobApplication(
+  jobApplicationId: number,
+  jobApplicationData: JobApplication
+): Promise<JobApplication | null> {
+  const {
+    job_title,
+    company_name,
+    location,
+    application_status,
+    job_posting_url,
+    applied_date,
+    notes,
+  } = jobApplicationData;
+  try {
+    const result = await db.query(
+      `UPDATE job_applications
+   SET job_title = $1,
+       company_name = $2,
+       location = $3,
+       application_status = $4,
+       job_posting_url = $5,
+       applied_date = $6,
+       notes = $7,
+       updated_at = NOW()
+   WHERE id = $8
+   RETURNING *`,
+      [
+        job_title,
+        company_name,
+        location,
+        application_status,
+        job_posting_url,
+        applied_date,
+        notes,
+        jobApplicationId,
+      ]
+    );
+    if (result.rows.length === 0) {
+      return null; // No job application found with the given ID
+    }
+    return result.rows[0];
+  } catch (err: any) {
+    console.error("🔥 DB error:", err);
+    throw new Error("Failed to update job application");
+  }
+}
+
+export { getJobApplicationById, createJobApplication, updateJobApplication };

@@ -21,7 +21,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   try {
     const newUserId = await createUser(result.data);
     res.status(201).json({ userId: newUserId });
-  } catch (err) {
+  } catch (err: any) {
     if (err.message === "EMAIL_TAKEN") {
       res.status(409).json({ error: "Email already in use" });
       return;

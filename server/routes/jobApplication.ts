@@ -7,6 +7,7 @@ import {
 import {
   createJobApplication,
   getJobApplicationById,
+  updateJobApplication,
 } from "../models/jobApplication";
 
 const router = express.Router();
@@ -49,6 +50,34 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
     res.json(jobApp);
   } catch (err) {
     console.error("❌ GET /job-applications/:id error:", err);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+// PUT /job-applications/:id – Update a job application by ID
+router.put("/:id", async (req: Request, res: Response): Promise<void> => {
+  const jobApplicationId = Number(req.params.id);
+  const result = createJobApplicationSchema.safeParse(req.body);
+  if (isNaN(jobApplicationId)) {
+    res.status(400).json({ error: "Invalid ID" });
+    return;
+  }
+  if (!result.success) {
+    res.status(400).json(result.error.format());
+    return;
+  }
+  try {
+    const updatedJobApplication = await updateJobApplication(
+      jobApplicationId,
+      result.data
+    );
+    if (!updatedJobApplication) {
+      res.status(404).json({ error: "Job application not found" });
+      return;
+    }
+    res.json(updatedJobApplication);
+  } catch (err) {
+    console.error("❌ PUT /job-applications/:id error:", err);
     res.status(500).json({ error: "Something went wrong" });
   }
 });
