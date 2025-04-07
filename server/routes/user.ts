@@ -1,11 +1,15 @@
 import express, { Request, Response } from "express";
 import { z } from "zod";
-import { createUser, getUserById, updateUser } from "../models/user";
+import {
+  createUser,
+  getUserById,
+  updateUser,
+  deleteUser,
+} from "../models/user";
 import { createUserSchema, CreateUserInput } from "../../shared/schemas/user";
 
 const router = express.Router();
 
-// POST /users – Create a new user
 router.post("/", async (req: Request, res: Response): Promise<void> => {
   const result = createUserSchema.safeParse(req.body);
 
@@ -17,18 +21,16 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   try {
     const newUserId = await createUser(result.data);
     res.status(201).json({ userId: newUserId });
-  } catch (err: any) {
+  } catch (err) {
     if (err.message === "EMAIL_TAKEN") {
       res.status(409).json({ error: "Email already in use" });
       return;
     }
 
-    console.error("❌ POST /users error:", err);
     res.status(500).json({ error: "Something went wrong" });
   }
 });
 
-// GET /users/:id – Get user by ID
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   const userId = Number(req.params.id);
 
@@ -46,7 +48,6 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
 
     res.json(user);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -91,12 +92,10 @@ router.post("/:id", async (req: Request, res: Response): Promise<void> => {
 
     res.json({ message: "User updated successfully", user: updatedUser });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
-// DELETE /users/:id – Delete user by ID
 router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
   const userId = Number(req.params.id);
   if (isNaN(userId)) {
@@ -110,12 +109,11 @@ router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Delete user logic here (not implemented in this example)
-    // await deleteUser(userId);
+    await deleteUser(userId);
+    res.status(201).json({ message: "User deleted successfully" });
 
-    res.status(204).send(); // No content
+    res.status(204).send();
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
