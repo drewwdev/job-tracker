@@ -44,4 +44,45 @@ async function getApplicationStageById(
   return result.rows[0];
 }
 
-export { createApplicationStage, getApplicationStageById };
+async function updateApplicationStage(
+  applicationStageId: number,
+  applicationStageData: Partial<ApplicationStage>
+): Promise<ApplicationStage | null> {
+  const fields: string[] = [];
+  const values: any[] = [];
+  let index = 1;
+
+  for (const [key, value] of Object.entries(applicationStageData)) {
+    if (value !== undefined) {
+      fields.push(`${key} = $${index}`);
+      values.push(value);
+      index++;
+    }
+  }
+
+  if (fields.length === 0) {
+    return null;
+  }
+
+  const query = `
+    UPDATE application_stages
+    SET ${fields.join(", ")}
+    WHERE id = $${index}
+    RETURNING *;
+  `;
+  values.push(applicationStageId);
+
+  const result = await db.query(query, values);
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  return result.rows[0];
+}
+
+export {
+  createApplicationStage,
+  getApplicationStageById,
+  updateApplicationStage,
+};
