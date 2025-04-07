@@ -13,7 +13,6 @@ import {
 
 const router = express.Router();
 
-// POST /job-applications – Create a new job application
 router.post("/", async (req: Request, res: Response): Promise<void> => {
   const result = createJobApplicationSchema.safeParse(req.body);
 
@@ -26,12 +25,10 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     const newJobApplicationId = await createJobApplication(result.data);
     res.status(201).json({ jobApplicationId: newJobApplicationId });
   } catch (err: any) {
-    console.error("❌ POST /job-applications error:", err);
     res.status(500).json({ error: "Something went wrong" });
   }
 });
 
-// GET /job-applications/:id – Get a job application by ID
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   const jobApplicationId = Number(req.params.id);
 
@@ -50,12 +47,10 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
 
     res.json(jobApp);
   } catch (err) {
-    console.error("❌ GET /job-applications/:id error:", err);
     res.status(500).json({ error: "Something went wrong" });
   }
 });
 
-// PUT /job-applications/:id – Update a job application by ID
 router.put("/:id", async (req: Request, res: Response): Promise<void> => {
   const jobApplicationId = Number(req.params.id);
   const result = createJobApplicationSchema.safeParse(req.body);
@@ -78,12 +73,10 @@ router.put("/:id", async (req: Request, res: Response): Promise<void> => {
     }
     res.json(updatedJobApplication);
   } catch (err) {
-    console.error("❌ PUT /job-applications/:id error:", err);
     res.status(500).json({ error: "Something went wrong" });
   }
 });
 
-// DELETE /job-applications/:id – Delete a job application by ID
 router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
   const jobApplicationId = Number(req.params.id);
   if (isNaN(jobApplicationId)) {
@@ -98,7 +91,6 @@ router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
     }
     res.json(deletedJobApplication);
   } catch (err) {
-    console.error("❌ DELETE /job-applications/:id error:", err);
     res.status(500).json({ error: "Something went wrong" });
   }
 });

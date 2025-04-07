@@ -52,7 +52,6 @@ async function createJobApplication(
 
     return result.rows[0].id;
   } catch (err: any) {
-    console.error("🔥 DB error:", err);
     throw new Error("Failed to create job application");
   }
 }
@@ -99,7 +98,6 @@ async function updateJobApplication(
     }
     return result.rows[0];
   } catch (err: any) {
-    console.error("🔥 DB error:", err);
     throw new Error("Failed to update job application");
   }
 }
@@ -115,7 +113,6 @@ async function deleteJobApplication(jobApplicationId: number) {
     }
     return result.rows[0];
   } catch (err: any) {
-    console.error("🔥 DB error:", err);
     throw new Error("Failed to delete job application");
   }
 }
