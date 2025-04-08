@@ -8,4 +8,10 @@ export const createUserSchema = z.object({
   provider_id: z.string().optional(),
 });
 
+export const loginUserSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+export type LoginUserInput = z.infer<typeof loginUserSchema>;
 export type CreateUserInput = z.infer<typeof createUserSchema>;

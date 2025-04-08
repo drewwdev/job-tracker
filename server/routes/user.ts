@@ -6,7 +6,12 @@ import {
   updateUser,
   deleteUser,
 } from "../models/user";
-import { createUserSchema, CreateUserInput } from "../../shared/schemas/user";
+import {
+  createUserSchema,
+  CreateUserInput,
+  loginUserSchema,
+  LoginUserInput,
+} from "../../shared/schemas/user";
 
 const router = express.Router();
 
@@ -27,6 +32,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    console.error(err);
     res.status(500).json({ error: "Something went wrong" });
   }
 });

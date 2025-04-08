@@ -1,4 +1,5 @@
 import db from "../db";
+import bcrypt from "bcrypt";
 
 type User = {
   email: string;
@@ -16,10 +17,17 @@ async function getUserById(userId: number) {
 async function createUser(userData: User): Promise<number> {
   const { email, username, password, provider, provider_id } = userData;
 
+  let hashedPassword: string | null = null;
+
+  if (provider === "local") {
+    if (!password) throw new Error("PASSWORD_REQUIRED");
+    hashedPassword = await bcrypt.hash(password, 10);
+  }
+
   try {
     const result = await db.query(
       "INSERT INTO users (email, username, password_hash, provider, provider_id) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-      [email, username, password, provider, provider_id]
+      [email, username, hashedPassword, provider, provider_id]
     );
 
     return result.rows[0].id;
@@ -56,4 +64,11 @@ async function deleteUser(userId: number) {
   await db.query("DELETE FROM users WHERE id = $1", [userId]);
 }
 
-export { getUserById, createUser, updateUser, deleteUser };
+async function getUserByEmail(email: string) {
+  const result = await db.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
+  return result.rows[0];
+}
+
+export { getUserById, createUser, updateUser, deleteUser, getUserByEmail };
