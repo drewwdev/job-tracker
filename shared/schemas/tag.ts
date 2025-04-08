@@ -10,7 +10,12 @@ export const addTagToApplicationSchema = z.object({
   tag_id: z.number().int(),
 });
 
+export const updateTagSchema = z.object({
+  name: z.string().min(1).optional(),
+});
+
 export type CreateTagInput = z.infer<typeof createTagSchema>;
 export type AddTagToApplicationInput = z.infer<
   typeof addTagToApplicationSchema
 >;
+export type UpdateTagInput = z.infer<typeof updateTagSchema>;
