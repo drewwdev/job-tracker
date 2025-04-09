@@ -1,7 +1,15 @@
 import db from "../db";
 import bcrypt from "bcrypt";
 
-type User = {
+export type User = {
+  id: number;
+  email: string;
+  username?: string;
+  provider: "local" | "google" | "github";
+  provider_id?: string;
+};
+
+export type NewUserInput = {
   email: string;
   username?: string;
   password?: string;
@@ -14,7 +22,7 @@ async function getUserById(userId: number) {
   return result.rows[0];
 }
 
-async function createUser(userData: User): Promise<number> {
+async function createUser(userData: NewUserInput): Promise<User> {
   const { email, username, password, provider, provider_id } = userData;
 
   let hashedPassword: string | null = null;
@@ -24,23 +32,20 @@ async function createUser(userData: User): Promise<number> {
     hashedPassword = await bcrypt.hash(password, 10);
   }
 
-  try {
-    const result = await db.query(
-      "INSERT INTO users (email, username, password_hash, provider, provider_id) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-      [email, username, hashedPassword, provider, provider_id]
-    );
+  const result = await db.query(
+    `INSERT INTO users (email, username, password_hash, provider, provider_id)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING id, email, username, provider, provider_id`,
+    [email, username, hashedPassword, provider, provider_id]
+  );
 
-    return result.rows[0].id;
-  } catch (err: any) {
-    if (err.code === "23505") {
-      throw new Error("EMAIL_TAKEN");
-    }
-    throw err;
-  }
+  return result.rows[0];
 }
 
-async function updateUser(userId: number, userData: Partial<User>) {
-  const keys = Object.keys(userData) as (keyof User)[];
+type UpdateUserInput = Partial<User> & { password?: string };
+
+async function updateUser(userId: number, userData: UpdateUserInput) {
+  const keys = Object.keys(userData) as (keyof UpdateUserInput)[];
   if (keys.length === 0) return null;
 
   const setClause = keys
@@ -50,7 +55,12 @@ async function updateUser(userId: number, userData: Partial<User>) {
     })
     .join(", ");
 
-  const values = keys.map((key) => userData[key]);
+  const values = keys.map((key) => {
+    if (key === "password") {
+      return bcrypt.hashSync(userData[key] as string, 10);
+    }
+    return userData[key];
+  });
 
   const result = await db.query(
     `UPDATE users SET ${setClause} WHERE id = $${keys.length + 1} RETURNING *`,
