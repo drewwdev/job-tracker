@@ -1,17 +1,16 @@
 import db from "../db";
 
 type Tag = {
-  user_id: number;
   name: string;
 };
 
 async function createTag(tagData: Tag): Promise<number> {
-  const { name, user_id } = tagData;
+  const { name } = tagData;
 
   try {
     const result = await db.query(
-      "INSERT INTO tags (name, user_id) VALUES ($1, $2) RETURNING id",
-      [name, user_id]
+      "INSERT INTO tags (name) VALUES ($1) RETURNING id",
+      [name]
     );
 
     return result.rows[0].id;
@@ -23,11 +22,8 @@ async function createTag(tagData: Tag): Promise<number> {
   }
 }
 
-async function getTagByNameAndUserId(name: string, user_id: number) {
-  const result = await db.query(
-    "SELECT * FROM tags WHERE name = $1 AND user_id = $2",
-    [name, user_id]
-  );
+async function getTagByName(name: string) {
+  const result = await db.query("SELECT * FROM tags WHERE name = $1", [name]);
   return result.rows[0];
 }
 
@@ -65,19 +61,16 @@ async function deleteTag(id: number) {
   return result.rows[0];
 }
 
-async function getTagsByUserId(user_id: number) {
-  const result = await db.query(
-    "SELECT * FROM tags WHERE user_id = $1 ORDER BY name ASC",
-    [user_id]
-  );
+async function getAllTags() {
+  const result = await db.query("SELECT * FROM tags ORDER BY name ASC");
   return result.rows;
 }
 
 export {
   createTag,
   getTagById,
-  getTagByNameAndUserId,
+  getTagByName,
   updateTag,
   deleteTag,
-  getTagsByUserId,
+  getAllTags,
 };

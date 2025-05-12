@@ -3,19 +3,12 @@ import { z } from "zod";
 import {
   getTagById,
   createTag,
-  getTagByNameAndUserId,
+  getTagByName,
   updateTag,
   deleteTag,
-  getTagsByUserId,
+  getAllTags,
 } from "../models/tag";
-import {
-  createTagSchema,
-  addTagToApplicationSchema,
-  CreateTagInput,
-  AddTagToApplicationInput,
-  updateTagSchema,
-  UpdateTagInput,
-} from "../../shared/schemas/tag";
+import { createTagSchema, updateTagSchema } from "../../shared/schemas/tag";
 
 const router = express.Router();
 
@@ -27,15 +20,15 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { name, user_id } = parsed.data;
+    const { name } = parsed.data;
 
-    const existingTag = await getTagByNameAndUserId(name, user_id);
+    const existingTag = await getTagByName(name);
     if (existingTag) {
       res.status(400).json({ error: "Tag already exists" });
       return;
     }
 
-    const tagId = await createTag({ user_id, name });
+    const tagId = await createTag({ name });
     if (!tagId) {
       console.error("Failed to create tag");
       res.status(500).json({ error: "Failed to create tag" });
@@ -114,16 +107,8 @@ router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
   res.status(200).json({ message: "Tag deleted" });
 });
 
-router.get("/", async (req: Request, res: Response): Promise<void> => {
-  const userIdParam = req.query.user_id;
-
-  const parsed = z.coerce.number().int().safeParse(userIdParam);
-  if (!parsed.success) {
-    res.status(400).json({ error: "Invalid user_id" });
-    return;
-  }
-
-  const tags = await getTagsByUserId(parsed.data);
+router.get("/", async (_req: Request, res: Response): Promise<void> => {
+  const tags = await getAllTags();
   res.status(200).json({ tags });
 });
 

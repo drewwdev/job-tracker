@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const createTagSchema = z.object({
-  user_id: z.number().int(),
   name: z.string().min(1),
 });
 
