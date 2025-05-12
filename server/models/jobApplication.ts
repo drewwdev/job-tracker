@@ -94,7 +94,7 @@ async function updateJobApplication(
       ]
     );
     if (result.rows.length === 0) {
-      return null; // No job application found with the given ID
+      return null;
     }
     return result.rows[0];
   } catch (err: any) {
@@ -109,7 +109,7 @@ async function deleteJobApplication(jobApplicationId: number) {
       [jobApplicationId]
     );
     if (result.rows.length === 0) {
-      return null; // No job application found with the given ID
+      return null;
     }
     return result.rows[0];
   } catch (err: any) {
