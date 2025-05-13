@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { jobApplicationListSchema } from "../../../shared/schemas/jobApplication.ts";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 type JobApplication = z.infer<typeof jobApplicationListSchema>[number];
 
@@ -24,19 +25,19 @@ export default function JobApplicationList() {
   return (
     <div className="space-y-4">
       {applications.map((app) => (
-        <div
-          key={app.id}
-          className="p-4 border rounded shadow hover:bg-gray-50 transition">
-          <h2 className="text-lg font-semibold">{app.title}</h2>
-          <p className="text-sm text-gray-600">{app.company_name}</p>
-          <p className="text-sm text-gray-500">{app.location}</p>
-          <p className="text-sm">Status: {app.application_status}</p>
-          <p className="text-sm">URL: {app.job_posting_url}</p>
-          <p className="text-sm text-gray-500">
-            Applied on: {new Date(app.applied_date).toLocaleDateString()}
-          </p>
-          <p className="text-sm text-gray-500">Notes: {app.notes}</p>
-        </div>
+        <Link key={app.id} to={`/application/${app.id}`}>
+          <div className="p-4 border rounded shadow hover:bg-gray-50 transition">
+            <h2 className="text-lg font-semibold">{app.title}</h2>
+            <p className="text-sm text-gray-600">{app.company_name}</p>
+            <p className="text-sm text-gray-500">{app.location}</p>
+            <p className="text-sm">Status: {app.application_status}</p>
+            <p className="text-sm">URL: {app.job_posting_url}</p>
+            <p className="text-sm text-gray-500">
+              Applied on: {new Date(app.applied_date).toLocaleDateString()}
+            </p>
+            <p className="text-sm text-gray-500">Notes: {app.notes}</p>
+          </div>
+        </Link>
       ))}
     </div>
   );
