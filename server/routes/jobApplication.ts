@@ -9,9 +9,19 @@ import {
   getJobApplicationById,
   updateJobApplication,
   deleteJobApplication,
+  getJobApplications,
 } from "../models/jobApplication";
 
 const router = express.Router();
+
+router.get("/", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const jobApplications = await getJobApplications();
+    res.json(jobApplications);
+  } catch (err) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
 
 router.post("/", async (req: Request, res: Response): Promise<void> => {
   const result = createJobApplicationSchema.safeParse(req.body);

@@ -117,9 +117,15 @@ async function deleteJobApplication(jobApplicationId: number) {
   }
 }
 
+async function getJobApplications() {
+  const result = await db.query("SELECT * FROM job_applications");
+  return result.rows;
+}
+
 export {
   getJobApplicationById,
   createJobApplication,
   updateJobApplication,
   deleteJobApplication,
+  getJobApplications,
 };
