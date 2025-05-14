@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import TagManager from "./TagManager";
 
 export default function JobApplicationDetail() {
   const { id } = useParams();
@@ -32,7 +33,7 @@ export default function JobApplicationDetail() {
       <p>URL: {job.job_posting_url}</p>
       <p>Notes: {job.notes}</p>
 
-      {/* Tags and edit UI will go here next */}
+      <TagManager jobApplicationId={job.id} />
     </div>
   );
 }

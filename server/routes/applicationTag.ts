@@ -6,7 +6,11 @@ import {
   deleteApplicationTag,
   deleteApplicationTagByJobAndTag,
 } from "../models/applicationTag";
-import { createApplicationTagSchema } from "../../shared/schemas/applicationTag";
+import { findOrCreateTagByName } from "../models/tag";
+import {
+  createApplicationTagSchema,
+  createApplicationTagByNameSchema,
+} from "../../shared/schemas/applicationTag";
 
 const router = express.Router();
 
@@ -21,6 +25,36 @@ router.post("/", async (req: Request, res: Response) => {
   try {
     const newId = await createApplicationTag(result.data);
     res.status(201).json({ applicationTagId: newId });
+  } catch (err: any) {
+    if (err.message === "APPLICATION_TAG_EXISTS") {
+      res
+        .status(409)
+        .json({ error: "This tag is already assigned to the application." });
+    } else {
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  }
+});
+
+router.post("/by-name", async (req: Request, res: Response) => {
+  const result = createApplicationTagByNameSchema.safeParse(req.body);
+
+  if (!result.success) {
+    res.status(400).json(result.error.format());
+    return;
+  }
+
+  const { job_application_id, tag_name } = result.data;
+
+  try {
+    const tag = await findOrCreateTagByName(tag_name.trim());
+
+    const newId = await createApplicationTag({
+      job_application_id,
+      tag_id: tag.id,
+    });
+
+    res.status(201).json({ applicationTagId: newId, tag });
   } catch (err: any) {
     if (err.message === "APPLICATION_TAG_EXISTS") {
       res

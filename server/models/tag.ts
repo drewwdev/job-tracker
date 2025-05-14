@@ -66,6 +66,14 @@ async function getAllTags() {
   return result.rows;
 }
 
+async function findOrCreateTagByName(name: string) {
+  const existing = await getTagByName(name);
+  if (existing) return existing;
+
+  const id = await createTag({ name });
+  return { id, name };
+}
+
 export {
   createTag,
   getTagById,
@@ -73,4 +81,5 @@ export {
   updateTag,
   deleteTag,
   getAllTags,
+  findOrCreateTagByName,
 };
