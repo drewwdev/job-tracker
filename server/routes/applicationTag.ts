@@ -82,26 +82,6 @@ router.get("/job/:jobId", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
-  const tagId = Number(req.params.id);
-
-  if (isNaN(tagId)) {
-    res.status(400).json({ error: "Invalid ID" });
-    return;
-  }
-
-  try {
-    const deleted = await deleteApplicationTag(tagId);
-    if (!deleted) {
-      res.status(404).json({ error: "Application tag not found" });
-      return;
-    }
-    res.json(deleted);
-  } catch (err) {
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
-
 router.delete("/by-composite", async (req: Request, res: Response) => {
   const schema = z.object({
     job_application_id: z.number(),
@@ -121,6 +101,27 @@ router.delete("/by-composite", async (req: Request, res: Response) => {
     );
     if (!deleted) {
       res.status(404).json({ error: "Application tag not found" });
+      return;
+    }
+    res.json(deleted);
+  } catch (err) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+router.delete("/:id", async (req: Request, res: Response) => {
+  const tagId = Number(req.params.id);
+
+  if (isNaN(tagId)) {
+    res.status(400).json({ error: "Invalid ID" });
+    return;
+  }
+
+  try {
+    const deleted = await deleteApplicationTag(tagId);
+    if (!deleted) {
+      res.status(404).json({ error: "Application tag not found" });
+
       return;
     }
     res.json(deleted);

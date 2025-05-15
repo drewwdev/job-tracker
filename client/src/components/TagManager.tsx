@@ -45,7 +45,7 @@ export default function TagManager({ jobApplicationId }: TagManagerProps) {
 
   const handleEditTag = async (tagId: number) => {
     try {
-      await axios.put(`http://localhost:3000/tags/${tagId}`, {
+      await axios.patch(`http://localhost:3000/tags/${tagId}`, {
         name: editingTagValue.trim(),
       });
       setEditingTagId(null);
@@ -58,7 +58,13 @@ export default function TagManager({ jobApplicationId }: TagManagerProps) {
   const handleDeleteTag = async (tagId: number) => {
     try {
       await axios.delete(
-        `http://localhost:3000/application-tags/${jobApplicationId}/${tagId}`
+        `http://localhost:3000/application-tags/by-composite`,
+        {
+          data: {
+            job_application_id: jobApplicationId,
+            tag_id: tagId,
+          },
+        }
       );
       fetchTags();
     } catch (err) {

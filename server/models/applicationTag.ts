@@ -7,11 +7,8 @@ type ApplicationTag = {
 
 async function createApplicationTag(data: ApplicationTag): Promise<number> {
   const { job_application_id, tag_id } = data;
-  console.log("📌 createApplicationTag input:", { job_application_id, tag_id });
 
   try {
-    console.log("💾 Inserting into application_tags...");
-
     const result = await db.query(
       `INSERT INTO application_tags (job_application_id, tag_id)
        VALUES ($1, $2)
@@ -20,7 +17,6 @@ async function createApplicationTag(data: ApplicationTag): Promise<number> {
     );
     return result.rows[0].id;
   } catch (err: any) {
-    console.error("❌ DB insert failed:", err);
     if (err.code === "23505") {
       throw new Error("APPLICATION_TAG_EXISTS");
     }

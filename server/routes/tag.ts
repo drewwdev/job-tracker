@@ -30,20 +30,17 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
 
     const tagId = await createTag({ name });
     if (!tagId) {
-      console.error("Failed to create tag");
       res.status(500).json({ error: "Failed to create tag" });
       return;
     }
 
     const createdTag = await getTagById(tagId);
     if (!createdTag) {
-      console.error("Failed to fetch created tag");
       res.status(500).json({ error: "Failed to fetch created tag" });
       return;
     }
     res.status(201).json({ message: "Tag created", tag: createdTag });
   } catch (error) {
-    console.error("Error creating tag:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
