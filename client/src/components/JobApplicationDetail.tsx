@@ -15,6 +15,8 @@ export default function JobApplicationDetail() {
     notes: string;
   } | null>(null);
 
+  const [clickEdit, setClickEdit] = useState(false);
+
   useEffect(() => {
     axios
       .get(`http://localhost:3000/job-applications/${id}`)
@@ -22,7 +24,104 @@ export default function JobApplicationDetail() {
       .catch((err) => console.error("Failed to load job", err));
   }, [id]);
 
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:3000/job-applications/${id}`);
+      window.location.href = "/";
+    } catch (err) {
+      console.error("Failed to delete job application", err);
+    }
+  };
+
+  const handleApplyChanges = async () => {
+    try {
+      await axios.put(`http://localhost:3000/job-applications/${id}`, job);
+      setClickEdit(false);
+    } catch (err) {
+      console.error("Failed to apply changes", err);
+    }
+  };
+
   if (!job) return <p>Loading...</p>;
+
+  if (clickEdit) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold">
+          <input
+            type="text"
+            value={job.job_title}
+            onChange={(e) => setJob({ ...job, job_title: e.target.value })}
+            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            placeholder="Job Title"
+          />
+        </h1>
+        <p className="text-gray-700">
+          <input
+            type="text"
+            value={job.company_name}
+            onChange={(e) => setJob({ ...job, company_name: e.target.value })}
+            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            placeholder="Company Name"
+          />
+        </p>
+        <p>
+          Status:
+          <select
+            value={job.application_status}
+            onChange={(e) =>
+              setJob({ ...job, application_status: e.target.value })
+            }
+            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500">
+            <option value="Applied">Applied</option>
+            <option value="Interviewing">Interviewing</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </p>
+        <p>
+          Location:
+          <input
+            type="text"
+            value={job.location}
+            onChange={(e) => setJob({ ...job, location: e.target.value })}
+            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            placeholder="Location"
+          />
+        </p>
+        <p>
+          URL:
+          <input
+            type="text"
+            value={job.job_posting_url}
+            onChange={(e) =>
+              setJob({ ...job, job_posting_url: e.target.value })
+            }
+            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            placeholder="Job Posting URL"
+          />
+        </p>
+        <p>
+          Notes:
+          <textarea
+            value={job.notes}
+            onChange={(e) => setJob({ ...job, notes: e.target.value })}
+            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            placeholder="Notes"
+          />
+        </p>
+
+        <button
+          onClick={() => {
+            handleApplyChanges();
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded">
+          Apply Changes
+        </button>
+        <TagManager jobApplicationId={job.id} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -33,6 +132,22 @@ export default function JobApplicationDetail() {
       <p>URL: {job.job_posting_url}</p>
       <p>Notes: {job.notes}</p>
 
+      <div className="flex justify-between">
+        <button
+          onClick={() => {
+            setClickEdit(true);
+          }}
+          className="bg-blue-500 text-white px-4 py-2 rounded">
+          Edit
+        </button>
+        <button
+          onClick={() => {
+            handleDelete();
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded">
+          Delete
+        </button>
+      </div>
       <TagManager jobApplicationId={job.id} />
     </div>
   );

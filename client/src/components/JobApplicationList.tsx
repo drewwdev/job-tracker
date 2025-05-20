@@ -27,7 +27,7 @@ export default function JobApplicationList() {
       {applications.map((app) => (
         <Link key={app.id} to={`/application/${app.id}`}>
           <div className="p-4 border rounded shadow hover:bg-gray-50 transition">
-            <h2 className="text-lg font-semibold">{app.title}</h2>
+            <h2 className="text-lg font-semibold">{app.job_title}</h2>
             <p className="text-sm text-gray-600">{app.company_name}</p>
             <p className="text-sm text-gray-500">{app.location}</p>
             <p className="text-sm">Status: {app.application_status}</p>
