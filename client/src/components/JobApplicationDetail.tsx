@@ -33,21 +33,21 @@ export default function JobApplicationDetail() {
     }
   };
 
-  const handleChangeApplicationStatus = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const newStatus = e.target.value;
-    setJob((prev) =>
-      prev ? { ...prev, application_status: newStatus } : null
-    );
-  };
-
   const handleApplyChanges = async () => {
     try {
       if (!job) return;
 
-      await axios.put(`http://localhost:3000/job-applications/${id}`, job);
+      const payload = {
+        job_title: job.job_title,
+        company_name: job.company_name,
+        location: job.location || undefined,
+        application_status: job.application_status || undefined,
+        job_posting_url: job.job_posting_url || undefined,
+        applied_date: job.applied_date ?? undefined,
+        notes: job.notes || undefined,
+      };
 
+      await axios.put(`http://localhost:3000/job-applications/${id}`, payload);
       setClickEdit(false);
     } catch (err) {
       console.error("Failed to apply changes", err);
@@ -62,7 +62,7 @@ export default function JobApplicationDetail() {
         <h1 className="text-2xl font-bold">
           <input
             type="text"
-            value={job.job_title}
+            value={job.job_title || ""}
             onChange={(e) => setJob({ ...job, job_title: e.target.value })}
             className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
             placeholder="Job Title"
@@ -71,7 +71,7 @@ export default function JobApplicationDetail() {
         <p className="text-gray-700">
           <input
             type="text"
-            value={job.company_name}
+            value={job.company_name || ""}
             onChange={(e) => setJob({ ...job, company_name: e.target.value })}
             className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
             placeholder="Company Name"
@@ -80,8 +80,10 @@ export default function JobApplicationDetail() {
         <p>
           Status:
           <select
-            value={job.application_status}
-            onChange={handleChangeApplicationStatus}
+            value={job.application_status || ""}
+            onChange={(e) =>
+              setJob({ ...job, application_status: e.target.value })
+            }
             className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500">
             <option value="wishlist">Wishlist</option>
             <option value="applied">Applied</option>
@@ -94,7 +96,7 @@ export default function JobApplicationDetail() {
           Location:
           <input
             type="text"
-            value={job.location}
+            value={job.location || ""}
             onChange={(e) => setJob({ ...job, location: e.target.value })}
             className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
             placeholder="Location"
@@ -104,7 +106,7 @@ export default function JobApplicationDetail() {
           URL:
           <input
             type="text"
-            value={job.job_posting_url}
+            value={job.job_posting_url || ""}
             onChange={(e) =>
               setJob({ ...job, job_posting_url: e.target.value })
             }
@@ -115,7 +117,7 @@ export default function JobApplicationDetail() {
         <p>
           Notes:
           <textarea
-            value={job.notes}
+            value={job.notes || ""}
             onChange={(e) => setJob({ ...job, notes: e.target.value })}
             className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
             placeholder="Notes"
