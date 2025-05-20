@@ -33,9 +33,21 @@ export default function JobApplicationDetail() {
     }
   };
 
+  const handleChangeApplicationStatus = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const newStatus = e.target.value;
+    setJob((prev) =>
+      prev ? { ...prev, application_status: newStatus } : null
+    );
+  };
+
   const handleApplyChanges = async () => {
     try {
+      if (!job) return;
+
       await axios.put(`http://localhost:3000/job-applications/${id}`, job);
+
       setClickEdit(false);
     } catch (err) {
       console.error("Failed to apply changes", err);
@@ -69,14 +81,13 @@ export default function JobApplicationDetail() {
           Status:
           <select
             value={job.application_status}
-            onChange={(e) =>
-              setJob({ ...job, application_status: e.target.value })
-            }
+            onChange={handleChangeApplicationStatus}
             className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500">
-            <option value="Applied">Applied</option>
-            <option value="Interviewing">Interviewing</option>
-            <option value="Offer">Offer</option>
-            <option value="Rejected">Rejected</option>
+            <option value="wishlist">Wishlist</option>
+            <option value="applied">Applied</option>
+            <option value="interviewing">Interviewing</option>
+            <option value="offer">Offer</option>
+            <option value="rejected">Rejected</option>
           </select>
         </p>
         <p>
