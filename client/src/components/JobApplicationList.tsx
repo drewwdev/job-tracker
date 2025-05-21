@@ -26,12 +26,13 @@ export default function JobApplicationList() {
     <div className="space-y-4">
       {applications.map((app) => (
         <Link key={app.id} to={`/application/${app.id}`}>
-          <div className="p-4 border rounded shadow hover:bg-gray-50 transition">
-            <h2 className="text-lg font-semibold">{app.job_title}</h2>
+          <div className="no-underline text-inherit hover:text-inherit font-bold">
+            <h2 className="">{app.job_title}</h2>
             <p className="text-sm text-gray-600">{app.company_name}</p>
             <p className="text-sm text-gray-500">{app.location}</p>
-            <p className="text-sm">Status: {app.application_status}</p>
-            <p className="text-sm">URL: {app.job_posting_url}</p>
+            <p className="text-sm text-gray-500">
+              Status: {app.application_status}
+            </p>
             <p className="text-sm text-gray-500">
               Applied on: {new Date(app.applied_date).toLocaleDateString()}
             </p>

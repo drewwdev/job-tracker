@@ -73,34 +73,30 @@ export default function TagManager({ jobApplicationId }: TagManagerProps) {
   };
 
   return (
-    <div className="space-y-2">
-      <h2 className="text-lg font-semibold">Tags</h2>
+    <div className="">
+      <h2 className="">Tags</h2>
 
-      <div className="flex gap-2">
+      <div className="">
         <input
           type="text"
           placeholder="New tag"
           value={newTag}
           onChange={(e) => setNewTag(e.target.value)}
-          className="border p-2 rounded"
+          className=""
         />
-        <button
-          onClick={handleAddTag}
-          className="bg-blue-600 text-white px-3 py-2 rounded">
+        <button onClick={handleAddTag} className="">
           Add
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="">
         {tags.map((tag) =>
           editingTagId === tag.id ? (
-            <div
-              key={tag.id}
-              className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
+            <div key={tag.id} className="">
               <input
                 value={editingTagValue}
                 onChange={(e) => setEditingTagValue(e.target.value)}
-                className="border px-1 rounded text-sm"
+                className=""
               />
               <button onClick={() => handleEditTag(tag.id)}>
                 <Check size={16} />
@@ -110,9 +106,7 @@ export default function TagManager({ jobApplicationId }: TagManagerProps) {
               </button>
             </div>
           ) : (
-            <div
-              key={tag.id}
-              className="flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+            <div key={tag.id} className="">
               <span>{tag.name}</span>
               <button
                 onClick={() => {

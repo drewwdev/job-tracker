@@ -58,51 +58,49 @@ export default function JobApplicationForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 p-4 border rounded shadow">
+    <form onSubmit={handleSubmit} className="">
       <div>
-        <label className="block text-sm font-medium">Job Title</label>
+        <label className="">Job Title</label>
         <input
           type="text"
           name="job_title"
           value={formData.job_title}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
+          className=""
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Company Name</label>
+        <label className="">Company Name</label>
         <input
           type="text"
           name="company_name"
           value={formData.company_name}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
+          className=""
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Location</label>
+        <label className="">Location</label>
         <input
           type="text"
           name="location"
           value={formData.location}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
+          className=""
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Status</label>
+        <label className="">Status</label>
         <select
           name="application_status"
           value={formData.application_status}
           onChange={handleChange}
-          className="w-full border p-2 rounded">
+          className="">
           <option value="wishlist">Wishlist</option>
           <option value="applied">Applied</option>
           <option value="interviewing">Interviewing</option>
@@ -112,43 +110,41 @@ export default function JobApplicationForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Job Posting URL</label>
+        <label className="">Job Posting URL</label>
         <input
           type="url"
           name="job_posting_url"
           value={formData.job_posting_url}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
+          className=""
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Applied Date</label>
+        <label className="">Applied Date</label>
         <input
           type="date"
           name="applied_date"
           value={formData.applied_date}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
+          className=""
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Notes</label>
+        <label className="">Notes</label>
         <textarea
           name="notes"
           value={formData.notes}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
+          className=""
         />
       </div>
 
-      {error && <p className="text-red-600 text-sm">{error}</p>}
-      {success && <p className="text-green-600 text-sm">Application saved!</p>}
+      {error && <p className="">{error}</p>}
+      {success && <p className="">Application saved!</p>}
 
-      <button
-        type="submit"
-        className="px-4 py-2 bg-blue-600 text-white rounded">
+      <button type="submit" className="">
         Save Job Application
       </button>
     </form>

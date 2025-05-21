@@ -58,22 +58,22 @@ export default function JobApplicationDetail() {
 
   if (clickEdit) {
     return (
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold">
+      <div className="">
+        <h1 className="">
           <input
             type="text"
             value={job.job_title || ""}
             onChange={(e) => setJob({ ...job, job_title: e.target.value })}
-            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            className=""
             placeholder="Job Title"
           />
         </h1>
-        <p className="text-gray-700">
+        <p className="">
           <input
             type="text"
             value={job.company_name || ""}
             onChange={(e) => setJob({ ...job, company_name: e.target.value })}
-            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            className=""
             placeholder="Company Name"
           />
         </p>
@@ -84,7 +84,7 @@ export default function JobApplicationDetail() {
             onChange={(e) =>
               setJob({ ...job, application_status: e.target.value })
             }
-            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500">
+            className="">
             <option value="wishlist">Wishlist</option>
             <option value="applied">Applied</option>
             <option value="interviewing">Interviewing</option>
@@ -98,7 +98,7 @@ export default function JobApplicationDetail() {
             type="text"
             value={job.location || ""}
             onChange={(e) => setJob({ ...job, location: e.target.value })}
-            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            className=""
             placeholder="Location"
           />
         </p>
@@ -110,7 +110,7 @@ export default function JobApplicationDetail() {
             onChange={(e) =>
               setJob({ ...job, job_posting_url: e.target.value })
             }
-            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            className=""
             placeholder="Job Posting URL"
           />
         </p>
@@ -119,7 +119,7 @@ export default function JobApplicationDetail() {
           <textarea
             value={job.notes || ""}
             onChange={(e) => setJob({ ...job, notes: e.target.value })}
-            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            className=""
             placeholder="Notes"
           />
         </p>
@@ -128,7 +128,7 @@ export default function JobApplicationDetail() {
           onClick={() => {
             handleApplyChanges();
           }}
-          className="bg-red-500 text-white px-4 py-2 rounded">
+          className="">
           Apply Changes
         </button>
         <TagManager jobApplicationId={job.id} />
@@ -137,27 +137,27 @@ export default function JobApplicationDetail() {
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">{job.job_title}</h1>
-      <p className="text-gray-700">{job.company_name}</p>
+    <div className="">
+      <h1 className="">{job.job_title}</h1>
+      <p className="">{job.company_name}</p>
       <p>Status: {job.application_status}</p>
       <p>Location: {job.location}</p>
       <p>URL: {job.job_posting_url}</p>
       <p>Notes: {job.notes}</p>
 
-      <div className="flex justify-between">
+      <div className="">
         <button
           onClick={() => {
             setClickEdit(true);
           }}
-          className="bg-blue-500 text-white px-4 py-2 rounded">
+          className="">
           Edit
         </button>
         <button
           onClick={() => {
             handleDelete();
           }}
-          className="bg-red-500 text-white px-4 py-2 rounded">
+          className="">
           Delete
         </button>
       </div>
