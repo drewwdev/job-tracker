@@ -31,6 +31,7 @@ export default function TagManager({ jobApplicationId }: TagManagerProps) {
 
   const handleAddTag = async () => {
     if (!newTag.trim()) return;
+
     try {
       await axios.post("http://localhost:3000/application-tags/by-name", {
         job_application_id: jobApplicationId,
@@ -74,29 +75,32 @@ export default function TagManager({ jobApplicationId }: TagManagerProps) {
 
   return (
     <div className="">
-      <h2 className="">Tags</h2>
+      <h2 className="text-lg font-bold mb-2">Tags</h2>
 
-      <div className="">
+      <div className="mb-4 flex items-center">
         <input
           type="text"
           placeholder="New tag"
           value={newTag}
           onChange={(e) => setNewTag(e.target.value)}
-          className=""
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
-        <button onClick={handleAddTag} className="">
+        <button
+          onClick={handleAddTag}
+          disabled={!newTag.trim()}
+          className=" ml-2 bg-blue-500 text-white px-4 py-2 rounded">
           Add
         </button>
       </div>
 
-      <div className="">
+      <div className="flex flex-col gap-2">
         {tags.map((tag) =>
           editingTagId === tag.id ? (
-            <div key={tag.id} className="">
+            <div key={tag.id} className="flex items-center gap-2">
               <input
                 value={editingTagValue}
                 onChange={(e) => setEditingTagValue(e.target.value)}
-                className=""
+                className=" border rounded px-2 py-1"
               />
               <button onClick={() => handleEditTag(tag.id)}>
                 <Check size={16} />
@@ -106,7 +110,7 @@ export default function TagManager({ jobApplicationId }: TagManagerProps) {
               </button>
             </div>
           ) : (
-            <div key={tag.id} className="">
+            <div key={tag.id} className="flex items-center gap-2">
               <span>{tag.name}</span>
               <button
                 onClick={() => {

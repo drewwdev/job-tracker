@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <header className="">
       <nav className="">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
+        <div className="max-w-4xl mx-auto flex justify-between items-center p-4">
           <Link
             to="/"
             className="no-underline text-inherit hover:text-inherit font-bold">

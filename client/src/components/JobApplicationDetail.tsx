@@ -131,33 +131,34 @@ export default function JobApplicationDetail() {
           className="">
           Apply Changes
         </button>
-        <TagManager jobApplicationId={job.id} />
       </div>
     );
   }
 
   return (
-    <div className="">
-      <h1 className="">{job.job_title}</h1>
-      <p className="">{job.company_name}</p>
-      <p>Status: {job.application_status}</p>
-      <p>Location: {job.location}</p>
-      <p>URL: {job.job_posting_url}</p>
-      <p>Notes: {job.notes}</p>
+    <div className="h-full bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-all">
+      <h1 className="text-lg font-semibold text-gray-900">{job.job_title}</h1>
+      <p className="text-sm text-gray-700 py-2">{job.company_name}</p>
+      <p className="text-sm text-gray-700 py-2">
+        Status: {job.application_status}
+      </p>
+      <p className="text-sm text-gray-700 py-2">Location: {job.location}</p>
+      <p className="text-sm text-gray-700 py-2">URL: {job.job_posting_url}</p>
+      <p className="text-sm text-gray-700 py-2">Notes: {job.notes}</p>
 
-      <div className="">
+      <div className="text-sm text-gray-700 py-2">
         <button
           onClick={() => {
             setClickEdit(true);
           }}
-          className="">
+          className="p-2 bg-blue-500 text-white rounded">
           Edit
         </button>
         <button
           onClick={() => {
             handleDelete();
           }}
-          className="">
+          className="p-2 bg-red-500 text-white rounded ml-2">
           Delete
         </button>
       </div>
