@@ -174,32 +174,65 @@ export default function JobApplicationDetail() {
   }
 
   return (
-    <div className="h-full bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-all">
-      <h1 className="text-lg font-semibold text-gray-900">{job.job_title}</h1>
-      <p className="text-sm text-gray-700 py-2">{job.company_name}</p>
-      <p className="text-sm text-gray-700 py-2">
-        Status: {job.application_status}
-      </p>
-      <p className="text-sm text-gray-700 py-2">Location: {job.location}</p>
-      <p className="text-sm text-gray-700 py-2">URL: {job.job_posting_url}</p>
-      <p className="text-sm text-gray-700 py-2">Notes: {job.notes}</p>
+    <div className="max-w-sm mx-auto bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+      <div className="mb-5">
+        <h1 className="text-lg font-semibold text-gray-900">{job.job_title}</h1>
+      </div>
 
-      <div className="text-sm text-gray-700 py-2">
+      <div className="mb-5">
+        <p className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Company Name
+        </p>
+        <p className="text-sm text-gray-700">{job.company_name}</p>
+      </div>
+
+      <div className="mb-5">
+        <p className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Status
+        </p>
+        <p className="text-sm text-gray-700">{job.application_status}</p>
+      </div>
+
+      <div className="mb-5">
+        <p className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Location
+        </p>
+        <p className="text-sm text-gray-700">{job.location}</p>
+      </div>
+
+      <div className="mb-5">
+        <p className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Job Posting URL
+        </p>
+        <a
+          href={job.job_posting_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-blue-600 hover:underline break-words">
+          {job.job_posting_url}
+        </a>
+      </div>
+
+      <div className="mb-5">
+        <p className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Notes
+        </p>
+        <p className="text-sm text-gray-700 whitespace-pre-wrap">{job.notes}</p>
+      </div>
+
+      <div className="flex items-center gap-2 mb-5">
         <button
-          onClick={() => {
-            setClickEdit(true);
-          }}
-          className="p-2 bg-blue-500 text-white rounded">
+          onClick={() => setClickEdit(true)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
           Edit
         </button>
         <button
-          onClick={() => {
-            handleDelete();
-          }}
-          className="p-2 bg-red-500 text-white rounded ml-2">
+          onClick={handleDelete}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700">
           Delete
         </button>
       </div>
+
       <TagManager jobApplicationId={job.id} />
     </div>
   );

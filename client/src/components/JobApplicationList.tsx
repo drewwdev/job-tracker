@@ -28,19 +28,31 @@ export default function JobApplicationList() {
         <Link
           key={app.id}
           to={`/application/${app.id}`}
-          className="w-full sm:w-[calc(50%-0.5rem)] text-inherit no-underline">
-          <div className="h-full bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-all">
-            <h2 className="text-lg font-semibold text-gray-900">
+          className="w-full sm:w-[calc(50%-0.5rem)] no-underline">
+          <div className="h-full bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all">
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
               {app.job_title}
             </h2>
-            <p className="text-sm text-gray-700">{app.company_name}</p>
-            <p className="text-sm text-gray-700">{app.location}</p>
-            <p className="text-sm text-gray-700">
-              <span className="font-medium">Status:</span>{" "}
+
+            <p className="text-sm text-gray-700 mb-1">
+              <span className="block font-medium text-gray-900">Company:</span>
+              {app.company_name}
+            </p>
+
+            <p className="text-sm text-gray-700 mb-1">
+              <span className="block font-medium text-gray-900">Location:</span>
+              {app.location}
+            </p>
+
+            <p className="text-sm text-gray-700 mb-1">
+              <span className="block font-medium text-gray-900">Status:</span>
               {app.application_status}
             </p>
+
             <p className="text-sm text-gray-700">
-              <span className="font-medium">Applied on:</span>{" "}
+              <span className="block font-medium text-gray-900">
+                Applied on:
+              </span>
               {new Date(app.applied_date).toLocaleDateString()}
             </p>
           </div>
