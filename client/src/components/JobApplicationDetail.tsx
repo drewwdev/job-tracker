@@ -58,77 +58,115 @@ export default function JobApplicationDetail() {
 
   if (clickEdit) {
     return (
-      <div className="">
-        <h1 className="">
+      <div className="max-w-sm mx-auto bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+        <div className="mb-5">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Job Title
+          </label>
           <input
             type="text"
             value={job.job_title || ""}
             onChange={(e) => setJob({ ...job, job_title: e.target.value })}
-            className=""
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Job Title"
           />
-        </h1>
-        <p className="">
+        </div>
+
+        <div className="mb-5">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Company Name
+          </label>
           <input
             type="text"
             value={job.company_name || ""}
             onChange={(e) => setJob({ ...job, company_name: e.target.value })}
-            className=""
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Company Name"
           />
-        </p>
-        <p>
-          Status:
+        </div>
+
+        <div className="mb-5">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Location
+          </label>
+          <input
+            type="text"
+            value={job.location || ""}
+            onChange={(e) => setJob({ ...job, location: e.target.value })}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Location"
+          />
+        </div>
+
+        <div className="mb-5">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Status
+          </label>
           <select
             value={job.application_status || ""}
             onChange={(e) =>
               setJob({ ...job, application_status: e.target.value })
             }
-            className="">
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none 
+                 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                 inline-flex items-center w-full dark:bg-blue-600 dark:hover:bg-blue-700 
+                 dark:focus:ring-blue-800">
             <option value="wishlist">Wishlist</option>
             <option value="applied">Applied</option>
             <option value="interviewing">Interviewing</option>
             <option value="offer">Offer</option>
             <option value="rejected">Rejected</option>
           </select>
-        </p>
-        <p>
-          Location:
-          <input
-            type="text"
-            value={job.location || ""}
-            onChange={(e) => setJob({ ...job, location: e.target.value })}
-            className=""
-            placeholder="Location"
-          />
-        </p>
-        <p>
-          URL:
+        </div>
+
+        <div className="mb-5">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Job Posting URL
+          </label>
           <input
             type="text"
             value={job.job_posting_url || ""}
             onChange={(e) =>
               setJob({ ...job, job_posting_url: e.target.value })
             }
-            className=""
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Job Posting URL"
           />
-        </p>
-        <p>
-          Notes:
+        </div>
+
+        <div className="mb-5">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Notes
+          </label>
           <textarea
             value={job.notes || ""}
             onChange={(e) => setJob({ ...job, notes: e.target.value })}
-            className=""
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Notes"
           />
-        </p>
+        </div>
 
         <button
-          onClick={() => {
-            handleApplyChanges();
-          }}
-          className="">
+          onClick={handleApplyChanges}
+          className="w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-white bg-green-600 
+               rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none 
+               focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 
+               dark:focus:ring-green-800">
           Apply Changes
         </button>
       </div>
