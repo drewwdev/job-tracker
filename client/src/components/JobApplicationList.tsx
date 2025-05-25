@@ -23,20 +23,26 @@ export default function JobApplicationList() {
   }, []);
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-5xl mx-auto flex flex-wrap gap-4 p-4">
       {applications.map((app) => (
-        <Link key={app.id} to={`/application/${app.id}`}>
-          <div className="no-underline text-inherit hover:text-inherit font-bold">
-            <h2 className="">{app.job_title}</h2>
-            <p className="text-sm text-gray-600">{app.company_name}</p>
-            <p className="text-sm text-gray-500">{app.location}</p>
-            <p className="text-sm text-gray-500">
-              Status: {app.application_status}
+        <Link
+          key={app.id}
+          to={`/application/${app.id}`}
+          className="w-full sm:w-[calc(50%-0.5rem)] text-inherit no-underline">
+          <div className="h-full bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-all">
+            <h2 className="text-lg font-semibold text-gray-900">
+              {app.job_title}
+            </h2>
+            <p className="text-sm text-gray-700">{app.company_name}</p>
+            <p className="text-sm text-gray-700">{app.location}</p>
+            <p className="text-sm text-gray-700">
+              <span className="font-medium">Status:</span>{" "}
+              {app.application_status}
             </p>
-            <p className="text-sm text-gray-500">
-              Applied on: {new Date(app.applied_date).toLocaleDateString()}
+            <p className="text-sm text-gray-700">
+              <span className="font-medium">Applied on:</span>{" "}
+              {new Date(app.applied_date).toLocaleDateString()}
             </p>
-            <p className="text-sm text-gray-500">Notes: {app.notes}</p>
           </div>
         </Link>
       ))}
