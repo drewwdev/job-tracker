@@ -1,22 +1,26 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { createJobApplicationSchema } from "../../../shared/schemas/jobApplication";
 import { z } from "zod";
-import TagManager from "../components/TagManager";
 
 type CreateJobAppInput = z.infer<typeof createJobApplicationSchema>;
 
 export default function JobApplicationForm() {
+  const today = new Date().toISOString().split("T")[0];
+
   const [formData, setFormData] = useState<CreateJobAppInput>({
     job_title: "",
     company_name: "",
     location: "",
     application_status: "wishlist",
     job_posting_url: "",
-    applied_date: "",
+    applied_date: today, // 👈 default to today
     notes: "",
     tags: [],
   });
+
+  const navigate = useNavigate();
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
@@ -40,18 +44,16 @@ export default function JobApplicationForm() {
     }
 
     try {
-      await axios.post("http://localhost:3000/job-applications", result.data);
+      const response = await axios.post(
+        "http://localhost:3000/job-applications",
+        result.data
+      );
+      const newId = response.data.jobApplicationId;
+
       setSuccess(true);
       setError(null);
-      setFormData({
-        job_title: "",
-        company_name: "",
-        location: "",
-        application_status: "wishlist",
-        job_posting_url: "",
-        applied_date: "",
-        notes: "",
-      });
+
+      navigate(`/application/${newId}`, { state: { success: true } });
     } catch (err) {
       console.error("Failed to save job application", err);
       setError("Failed to save job application. Please try again.");
@@ -157,12 +159,11 @@ export default function JobApplicationForm() {
         />
       </div>
 
-      <TagManager
-        tags={formData.tags}
-        setTags={(tags) => setFormData({ ...formData, tags })}
-      />
-
-      {error && <p>{error}</p>}
+      {error && (
+        <div className="mb-4 rounded-md bg-red-100 p-3 text-sm text-red-800 border border-red-300">
+          {error}
+        </div>
+      )}
       {success && <p className="py-4">Application saved!</p>}
 
       <button

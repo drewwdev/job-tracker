@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TagManager from "./TagManager";
@@ -15,6 +15,18 @@ export default function JobApplicationDetail() {
     notes: string;
     tags?: string[];
   } | null>(null);
+
+  const location = useLocation();
+  const [showSuccess, setShowSuccess] = useState<boolean>(
+    location.state?.success || false
+  );
+
+  useEffect(() => {
+    if (showSuccess) {
+      const timer = setTimeout(() => setShowSuccess(false), 3000); // 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccess]);
 
   const [clickEdit, setClickEdit] = useState(false);
 
@@ -183,6 +195,12 @@ export default function JobApplicationDetail() {
 
   return (
     <div className="max-w-sm mx-auto bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+      {showSuccess && (
+        <div className="mb-4 rounded-md bg-green-100 p-3 text-sm text-green-800 border border-green-300">
+          Job successfully created! You can now add tags.
+        </div>
+      )}
+
       <div className="mb-5">
         <h1 className="text-lg font-semibold text-gray-900">{job.job_title}</h1>
       </div>
