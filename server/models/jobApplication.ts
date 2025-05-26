@@ -13,6 +13,7 @@ type JobApplication = {
   job_posting_url?: string;
   applied_date?: Date;
   notes?: string;
+  tags?: string[];
 };
 
 async function getJobApplicationById(jobApplicationId: number) {
@@ -34,11 +35,12 @@ async function createJobApplication(
     job_posting_url,
     applied_date,
     notes,
+    tags,
   } = jobApplicationData;
 
   try {
     const result = await db.query(
-      "INSERT INTO job_applications (job_title, company_name, location, application_status, job_posting_url, applied_date, notes) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+      "INSERT INTO job_applications (job_title, company_name, location, application_status, job_posting_url, applied_date, notes, tags) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
       [
         job_title,
         company_name,
@@ -47,6 +49,7 @@ async function createJobApplication(
         job_posting_url,
         applied_date,
         notes,
+        tags ?? [],
       ]
     );
 
@@ -68,6 +71,7 @@ async function updateJobApplication(
     job_posting_url,
     applied_date,
     notes,
+    tags,
   } = jobApplicationData;
   try {
     const result = await db.query(
@@ -79,8 +83,9 @@ async function updateJobApplication(
        job_posting_url = $5,
        applied_date = $6,
        notes = $7,
+        tags = $8,
        updated_at = NOW()
-   WHERE id = $8
+   WHERE id = $9
    RETURNING *`,
       [
         job_title,
@@ -90,6 +95,7 @@ async function updateJobApplication(
         job_posting_url,
         applied_date,
         notes,
+        tags ?? [],
         jobApplicationId,
       ]
     );

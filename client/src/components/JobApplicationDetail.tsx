@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import TagManager from "./TagManager";
 
 export default function JobApplicationDetail() {
   const { id } = useParams();
@@ -232,8 +231,6 @@ export default function JobApplicationDetail() {
           Delete
         </button>
       </div>
-
-      <TagManager jobApplicationId={job.id} />
     </div>
   );
 }

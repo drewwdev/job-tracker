@@ -10,6 +10,7 @@ export const createJobApplicationSchema = z.object({
   job_posting_url: z.string().url().optional(),
   applied_date: z.coerce.date().optional(),
   notes: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export const jobApplicationOutputSchema = z.object({
@@ -24,6 +25,7 @@ export const jobApplicationOutputSchema = z.object({
   job_posting_url: z.string().nullable().optional(),
   applied_date: z.string().nullable().optional(), // comes back as string from DB/JSON
   notes: z.string().nullable().optional(),
+  tags: z.array(z.string()).optional(),
 });
 export const jobApplicationListSchema = z.array(jobApplicationOutputSchema);
 
