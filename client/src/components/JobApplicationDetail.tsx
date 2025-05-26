@@ -46,6 +46,7 @@ export default function JobApplicationDetail() {
         job_posting_url: job.job_posting_url || undefined,
         applied_date: job.applied_date ?? undefined,
         notes: job.notes || undefined,
+        tags: job.tags || [],
       };
 
       await axios.put(`http://localhost:3000/job-applications/${id}`, payload);
@@ -163,7 +164,8 @@ export default function JobApplicationDetail() {
         </div>
 
         <TagManager
-          tags={job.tags}
+          jobId={job.id}
+          tags={job.tags ?? []}
           setTags={(tags) => setJob({ ...job, tags })}
         />
 
@@ -227,6 +229,7 @@ export default function JobApplicationDetail() {
       </div>
 
       <TagManager
+        jobId={job.id}
         tags={job.tags}
         setTags={(tags) => setJob({ ...job, tags })}
       />

@@ -1,23 +1,62 @@
-import { useState } from "react";
+import { memo, useState } from "react";
+import axios from "axios";
 
 type TagManagerProps = {
   tags: string[];
   setTags: (tags: string[]) => void;
+  jobId: number;
 };
 
-export default function TagManager({ tags, setTags }: TagManagerProps) {
+const TagManager = memo(function TagManager({
+  tags,
+  setTags,
+  jobId,
+}: TagManagerProps) {
   const [newTag, setNewTag] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const updateTagsInDb = async (updatedTags: string[]) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/job-applications/${jobId}`
+      );
+      const fullJob = res.data;
+
+      const { applied_date, job_posting_url, notes, ...rest } = fullJob;
+
+      const updatedJob = {
+        ...rest,
+        job_posting_url: job_posting_url ?? undefined,
+        notes: notes ?? undefined,
+        applied_date: applied_date ? new Date(applied_date) : undefined,
+        tags: updatedTags,
+      };
+
+      await axios.put(
+        `http://localhost:3000/job-applications/${jobId}`,
+        updatedJob
+      );
+      setTags(updatedTags);
+    } catch (err) {
+      console.error("Failed to update tags", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addTag = () => {
     const trimmed = newTag.trim().toLowerCase();
     if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
+      const updated = [...tags, trimmed];
+      updateTagsInDb(updated);
       setNewTag("");
     }
   };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
+    const updated = tags.filter((tag) => tag !== tagToRemove);
+    updateTagsInDb(updated);
   };
 
   return (
@@ -53,14 +92,18 @@ export default function TagManager({ tags, setTags }: TagManagerProps) {
           }}
           placeholder="Add tag..."
           className="flex-1 p-2 border border-gray-300 rounded-l-md focus:ring-blue-500 focus:border-blue-500"
+          disabled={loading}
         />
         <button
           type="button"
           onClick={addTag}
+          disabled={loading}
           className="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">
           Add
         </button>
       </div>
     </div>
   );
-}
+});
+
+export default TagManager;
