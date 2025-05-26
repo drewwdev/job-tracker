@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import TagManager from "./TagManager";
 
 export default function JobApplicationDetail() {
   const { id } = useParams();
@@ -12,6 +13,7 @@ export default function JobApplicationDetail() {
     application_status: string;
     job_posting_url: string;
     notes: string;
+    tags?: string[];
   } | null>(null);
 
   const [clickEdit, setClickEdit] = useState(false);
@@ -160,6 +162,11 @@ export default function JobApplicationDetail() {
           />
         </div>
 
+        <TagManager
+          tags={job.tags}
+          setTags={(tags) => setJob({ ...job, tags })}
+        />
+
         <button
           onClick={handleApplyChanges}
           className="w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-white bg-green-600 
@@ -218,6 +225,11 @@ export default function JobApplicationDetail() {
         </p>
         <p className="text-sm text-gray-700 whitespace-pre-wrap">{job.notes}</p>
       </div>
+
+      <TagManager
+        tags={job.tags}
+        setTags={(tags) => setJob({ ...job, tags })}
+      />
 
       <div className="flex items-center gap-2 mb-5">
         <button

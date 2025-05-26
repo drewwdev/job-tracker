@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { createJobApplicationSchema } from "../../../shared/schemas/jobApplication";
 import { z } from "zod";
+import TagManager from "../components/TagManager";
 
 type CreateJobAppInput = z.infer<typeof createJobApplicationSchema>;
 
@@ -14,6 +15,7 @@ export default function JobApplicationForm() {
     job_posting_url: "",
     applied_date: "",
     notes: "",
+    tags: [],
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -60,9 +62,7 @@ export default function JobApplicationForm() {
   return (
     <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4">
       <div className="mb-5">
-        <label
-          for="text"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Job Title
         </label>
         <input
@@ -156,6 +156,11 @@ export default function JobApplicationForm() {
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
       </div>
+
+      <TagManager
+        tags={formData.tags}
+        setTags={(tags) => setFormData({ ...formData, tags })}
+      />
 
       {error && <p>{error}</p>}
       {success && <p className="py-4">Application saved!</p>}
