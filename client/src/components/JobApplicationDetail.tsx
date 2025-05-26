@@ -23,7 +23,7 @@ export default function JobApplicationDetail() {
 
   useEffect(() => {
     if (showSuccess) {
-      const timer = setTimeout(() => setShowSuccess(false), 3000); // 3 seconds
+      const timer = setTimeout(() => setShowSuccess(false), 3000);
       return () => clearTimeout(timer);
     }
   }, [showSuccess]);
