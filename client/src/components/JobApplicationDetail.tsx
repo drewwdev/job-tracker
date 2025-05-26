@@ -1,4 +1,4 @@
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TagManager from "./TagManager";
@@ -15,6 +15,8 @@ export default function JobApplicationDetail() {
     notes: string;
     tags?: string[];
   } | null>(null);
+
+  const navigate = useNavigate();
 
   const location = useLocation();
   const [showSuccess, setShowSuccess] = useState<boolean>(
@@ -40,7 +42,7 @@ export default function JobApplicationDetail() {
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:3000/job-applications/${id}`);
-      window.location.href = "/";
+      navigate("/", { state: { source: "real" } });
     } catch (err) {
       console.error("Failed to delete job application", err);
     }

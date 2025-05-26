@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import JobApplicationList from "../components/JobApplicationList";
 import axios from "axios";
@@ -13,7 +14,15 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const { showDemoJobs, setShowDemoJobs } = useShowDemo();
 
+  const location = useLocation();
+
   useEffect(() => {
+    if (location.state?.source === "real") {
+      setShowDemoJobs(false);
+
+      window.history.replaceState({}, document.title);
+    }
+
     axios
       .get("http://localhost:3000/job-applications")
       .then((res) => {
@@ -25,7 +34,7 @@ export default function Dashboard() {
         }
       })
       .catch((err) => console.error("Failed to fetch applications", err));
-  }, []);
+  }, [location.state, setShowDemoJobs]);
 
   const filteredApplications = applications
     .filter((app) =>

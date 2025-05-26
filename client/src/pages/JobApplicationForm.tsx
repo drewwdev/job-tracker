@@ -15,7 +15,7 @@ export default function JobApplicationForm() {
     location: "",
     application_status: "wishlist",
     job_posting_url: "",
-    applied_date: today, // 👈 default to today
+    applied_date: today,
     notes: "",
     tags: [],
   });
