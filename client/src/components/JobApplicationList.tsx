@@ -1,27 +1,14 @@
-import { useEffect, useState } from "react";
-import { jobApplicationListSchema } from "../../../shared/schemas/jobApplication.ts";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { z } from "zod";
+import { jobApplicationListSchema } from "../../../shared/schemas/jobApplication";
 
 type JobApplication = z.infer<typeof jobApplicationListSchema>[number];
 
-export default function JobApplicationList() {
-  const [applications, setApplications] = useState<JobApplication[]>([]);
+type Props = {
+  applications: JobApplication[];
+};
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/job-applications")
-      .then((res) => {
-        const parsed = jobApplicationListSchema.safeParse(res.data);
-        if (parsed.success) {
-          setApplications(parsed.data);
-        } else {
-          console.error("Invalid data format", parsed.error);
-        }
-      })
-      .catch((err) => console.error("Failed to fetch applications", err));
-  }, []);
-
+export default function JobApplicationList({ applications }: Props) {
   return (
     <div className="max-w-5xl mx-auto flex flex-wrap gap-4 p-4">
       {applications.map((app) => (

@@ -58,7 +58,7 @@ export default function JobApplicationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
+    <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4">
       <div className="mb-5">
         <label
           for="text"
@@ -157,7 +157,7 @@ export default function JobApplicationForm() {
         />
       </div>
 
-      {error && <p className="">{error}</p>}
+      {error && <p>{error}</p>}
       {success && <p className="py-4">Application saved!</p>}
 
       <button
