@@ -1,9 +1,9 @@
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import axios from "axios";
 
 type TagManagerProps = {
-  tags: string[];
-  setTags: (tags: string[]) => void;
+  tags: { name: string; color_class: string }[];
+  setTags: (tags: { name: string; color_class: string }[]) => void;
   jobId: number;
 };
 
@@ -14,8 +14,18 @@ const TagManager = memo(function TagManager({
 }: TagManagerProps) {
   const [newTag, setNewTag] = useState("");
   const [loading, setLoading] = useState(false);
+  const [allTags, setAllTags] = useState<
+    { name: string; color_class: string }[]
+  >([]);
 
-  const updateTagsInDb = async (updatedTags: string[]) => {
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/tags")
+      .then((res) => setAllTags(res.data))
+      .catch((err) => console.error("Failed to load tags", err));
+  }, []);
+
+  const updateTagsInDb = async (updatedNames: string[]) => {
     setLoading(true);
     try {
       const res = await axios.get(
@@ -30,33 +40,43 @@ const TagManager = memo(function TagManager({
         job_posting_url: job_posting_url ?? undefined,
         notes: notes ?? undefined,
         applied_date: applied_date ? new Date(applied_date) : undefined,
-        tags: updatedTags,
+        tags: updatedNames,
       };
 
-      await axios.put(
+      const updatedRes = await axios.put(
         `http://localhost:3000/job-applications/${jobId}`,
         updatedJob
       );
-      setTags(updatedTags);
+
+      setTags(updatedRes.data.tags);
     } catch (err) {
       console.error("Failed to update tags", err);
     } finally {
       setLoading(false);
     }
   };
-
   const addTag = () => {
     const trimmed = newTag.trim().toLowerCase();
-    if (trimmed && !tags.includes(trimmed)) {
-      const updated = [...tags, trimmed];
-      updateTagsInDb(updated);
-      setNewTag("");
-    }
+    if (!trimmed || tags.some((tag) => tag.name === trimmed)) return;
+
+    const tagExists = allTags.find((t) => t.name === trimmed);
+    const updated = [
+      ...tags,
+      {
+        name: trimmed,
+        color_class: tagExists
+          ? tagExists.color_class
+          : "bg-gray-200 text-gray-800",
+      },
+    ];
+
+    updateTagsInDb(updated.map((t) => t.name));
+    setNewTag("");
   };
 
   const removeTag = (tagToRemove: string) => {
-    const updated = tags.filter((tag) => tag !== tagToRemove);
-    updateTagsInDb(updated);
+    const updated = tags.filter((tag) => tag.name !== tagToRemove);
+    updateTagsInDb(updated.map((t) => t.name));
   };
 
   return (
@@ -67,18 +87,19 @@ const TagManager = memo(function TagManager({
       <div className="flex flex-wrap gap-2 mb-2">
         {tags.map((tag) => (
           <span
-            key={tag}
-            className="inline-flex items-center px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full">
-            {tag}
+            key={tag.name}
+            className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-full ${tag.color_class}`}>
+            {tag.name}
             <button
               type="button"
-              onClick={() => removeTag(tag)}
-              className="ml-2 text-blue-500 hover:text-blue-700">
+              onClick={() => removeTag(tag.name)}
+              className="ml-2 text-black hover:text-red-600">
               &times;
             </button>
           </span>
         ))}
       </div>
+
       <div className="flex">
         <input
           type="text"

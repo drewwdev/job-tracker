@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { createJobApplicationSchema } from "../../../shared/schemas/jobApplication";
 import { z } from "zod";
 
 type CreateJobAppInput = z.infer<typeof createJobApplicationSchema>;
+
+type Tag = {
+  name: string;
+  color_class: string;
+};
 
 export default function JobApplicationForm() {
   const today = new Date().toISOString().split("T")[0];
@@ -19,6 +24,15 @@ export default function JobApplicationForm() {
     notes: "",
     tags: [],
   });
+
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/tags")
+      .then((res) => setAvailableTags(res.data))
+      .catch((err) => console.error("Failed to load tags", err));
+  }, []);
 
   const navigate = useNavigate();
 
@@ -157,6 +171,44 @@ export default function JobApplicationForm() {
           onChange={handleChange}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
+      </div>
+
+      <div className="mb-5">
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Tags
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {availableTags.map((tag) => {
+            const isSelected = formData.tags.includes(tag.name);
+            return (
+              <label
+                key={tag.name}
+                className={`cursor-pointer px-3 py-1 rounded-full text-sm font-medium border 
+            ${
+              isSelected
+                ? tag.color_class
+                : "bg-white text-gray-700 border-gray-300"
+            }`}>
+                <input
+                  type="checkbox"
+                  value={tag.name}
+                  checked={isSelected}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setFormData((prev) => ({
+                      ...prev,
+                      tags: checked
+                        ? [...prev.tags, tag.name]
+                        : prev.tags.filter((t) => t !== tag.name),
+                    }));
+                  }}
+                  className="hidden"
+                />
+                {tag.name}
+              </label>
+            );
+          })}
+        </div>
       </div>
 
       {error && (

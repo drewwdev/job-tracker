@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import { z } from "zod";
 import {
   createJobApplicationSchema,
   CreateJobApplicationInput,
@@ -14,16 +13,19 @@ import {
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response): Promise<void> => {
+// GET all job applications
+router.get("/", async (_req: Request, res: Response) => {
   try {
     const jobApplications = await getJobApplications();
     res.json(jobApplications);
   } catch (err) {
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("Failed to fetch job applications", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.post("/", async (req: Request, res: Response): Promise<void> => {
+// POST a new job application
+router.post("/", async (req: Request, res: Response) => {
   const result = createJobApplicationSchema.safeParse(req.body);
 
   if (!result.success) {
@@ -32,23 +34,25 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    const newJobApplicationId = await createJobApplication(result.data);
-    res.status(201).json({ jobApplicationId: newJobApplicationId });
-  } catch (err: any) {
-    res.status(500).json({ error: "Something went wrong" });
+    const newJobApp = await createJobApplication(result.data);
+    res.status(201).json(newJobApp);
+  } catch (err) {
+    console.error("Failed to create job application", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.get("/:id", async (req: Request, res: Response): Promise<void> => {
-  const jobApplicationId = Number(req.params.id);
+// GET a single job application by ID
+router.get("/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
 
-  if (isNaN(jobApplicationId)) {
+  if (isNaN(id)) {
     res.status(400).json({ error: "Invalid ID" });
     return;
   }
 
   try {
-    const jobApp = await getJobApplicationById(jobApplicationId);
+    const jobApp = await getJobApplicationById(id);
 
     if (!jobApp) {
       res.status(404).json({ error: "Job application not found" });
@@ -57,51 +61,62 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
 
     res.json(jobApp);
   } catch (err) {
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("Failed to fetch job application", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.put("/:id", async (req: Request, res: Response): Promise<void> => {
-  const jobApplicationId = Number(req.params.id);
+// PUT (update) a job application
+router.put("/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
   const result = createJobApplicationSchema.safeParse(req.body);
-  if (isNaN(jobApplicationId)) {
+
+  if (isNaN(id)) {
     res.status(400).json({ error: "Invalid ID" });
     return;
   }
+
   if (!result.success) {
     res.status(400).json(result.error.format());
     return;
   }
+
   try {
-    const updatedJobApplication = await updateJobApplication(
-      jobApplicationId,
-      result.data
-    );
-    if (!updatedJobApplication) {
+    const updatedJobApp = await updateJobApplication(id, result.data);
+
+    if (!updatedJobApp) {
       res.status(404).json({ error: "Job application not found" });
       return;
     }
-    res.json(updatedJobApplication);
+
+    res.json(updatedJobApp);
   } catch (err) {
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("Failed to update job application", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
-  const jobApplicationId = Number(req.params.id);
-  if (isNaN(jobApplicationId)) {
+// DELETE a job application
+router.delete("/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+
+  if (isNaN(id)) {
     res.status(400).json({ error: "Invalid ID" });
     return;
   }
+
   try {
-    const deletedJobApplication = await deleteJobApplication(jobApplicationId);
-    if (!deletedJobApplication) {
+    const deletedJobApp = await deleteJobApplication(id);
+
+    if (!deletedJobApp) {
       res.status(404).json({ error: "Job application not found" });
       return;
     }
-    res.json(deletedJobApplication);
+
+    res.json(deletedJobApp);
   } catch (err) {
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("Failed to delete job application", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

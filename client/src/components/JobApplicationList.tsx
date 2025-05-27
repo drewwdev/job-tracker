@@ -47,9 +47,9 @@ export default function JobApplicationList({ applications }: Props) {
               <div className="flex flex-wrap gap-2 mt-2">
                 {app.tags.map((tag) => (
                   <span
-                    key={tag}
-                    className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                    {tag}
+                    key={tag.name}
+                    className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-full ${tag.color_class}`}>
+                    {tag.name}
                   </span>
                 ))}
               </div>

@@ -13,7 +13,8 @@ export default function JobApplicationDetail() {
     application_status: string;
     job_posting_url: string;
     notes: string;
-    tags?: string[];
+    tags?: { name: string; color_class: string }[];
+    applied_date?: string;
   } | null>(null);
 
   const navigate = useNavigate();
@@ -259,11 +260,20 @@ export default function JobApplicationDetail() {
         <p className="text-sm text-gray-700 whitespace-pre-wrap">{job.notes}</p>
       </div>
 
-      <TagManager
-        jobId={job.id}
-        tags={job.tags}
-        setTags={(tags) => setJob({ ...job, tags })}
-      />
+      <div className="mb-5">
+        <p className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Tags
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {job.tags?.map((tag) => (
+            <span
+              key={tag.name}
+              className={`px-2 py-1 text-xs rounded-full font-semibold ${tag.color_class}`}>
+              {tag.name}
+            </span>
+          ))}
+        </div>
+      </div>
 
       <div className="flex items-center gap-2 mb-5">
         <button

@@ -39,8 +39,8 @@ export default function Dashboard() {
   const filteredApplications = applications
     .filter((app) =>
       showDemoJobs
-        ? (app.tags ?? []).includes("demo")
-        : !(app.tags ?? []).includes("demo")
+        ? (app.tags ?? []).some((tag) => tag.name === "demo")
+        : !(app.tags ?? []).some((tag) => tag.name === "demo")
     )
     .filter((app) =>
       [
@@ -48,7 +48,7 @@ export default function Dashboard() {
         app.company_name,
         app.location,
         app.application_status,
-        ...(app.tags || []),
+        ...(app.tags?.map((t) => t.name) ?? []),
       ]
         .join(" ")
         .toLowerCase()
