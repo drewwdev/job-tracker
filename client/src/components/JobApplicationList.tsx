@@ -6,10 +6,9 @@ type JobApplication = z.infer<typeof jobApplicationListSchema>[number];
 
 type Props = {
   applications: JobApplication[];
-  showDemo: boolean;
 };
 
-export default function JobApplicationList({ applications, showDemo }: Props) {
+export default function JobApplicationList({ applications }: Props) {
   return (
     <div className="flex flex-wrap gap-4 sm:gap-6 lg:gap-8 justify-start px-4">
       {applications.map((app) => (
@@ -21,12 +20,6 @@ export default function JobApplicationList({ applications, showDemo }: Props) {
             <h2 className="text-lg font-semibold text-gray-900 mb-2">
               {app.job_title}
             </h2>
-
-            {app.is_demo && showDemo && (
-              <span className="inline-block mb-2 px-2 py-1 text-xs font-medium text-yellow-700 bg-yellow-100 rounded-full">
-                Demo Job
-              </span>
-            )}
 
             <p className="text-sm text-gray-700 mb-1">
               <span className="block font-medium text-gray-900">Company:</span>

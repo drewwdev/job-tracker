@@ -39,8 +39,8 @@ export default function Dashboard() {
   const filteredApplications = applications
     .filter((app) =>
       showDemoJobs
-        ? app.is_demo || (app.tags ?? []).includes("demo")
-        : !app.is_demo && !(app.tags ?? []).includes("demo")
+        ? (app.tags ?? []).includes("demo")
+        : !(app.tags ?? []).includes("demo")
     )
     .filter((app) =>
       [

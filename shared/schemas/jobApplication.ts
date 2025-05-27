@@ -23,7 +23,7 @@ export const jobApplicationOutputSchema = z.object({
     .nullable()
     .optional(),
   job_posting_url: z.string().nullable().optional(),
-  applied_date: z.string().nullable().optional(), // comes back as string from DB/JSON
+  applied_date: z.string().nullable().optional(),
   notes: z.string().nullable().optional(),
   tags: z.array(z.string()).optional(),
 });

@@ -243,6 +243,17 @@ export default function JobApplicationDetail() {
 
       <div className="mb-5">
         <p className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Applied Date
+        </p>
+        <p className="text-sm text-gray-700">
+          {job.applied_date
+            ? new Date(job.applied_date).toLocaleDateString()
+            : "Not specified"}
+        </p>
+      </div>
+
+      <div className="mb-5">
+        <p className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
           Notes
         </p>
         <p className="text-sm text-gray-700 whitespace-pre-wrap">{job.notes}</p>
