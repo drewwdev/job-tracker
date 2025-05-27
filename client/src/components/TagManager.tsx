@@ -48,13 +48,7 @@ const TagManager = memo(function TagManager({
       );
       const fullJob = res.data;
 
-      const {
-        applied_date,
-        job_posting_url,
-        notes,
-        tags: _ignoredTags,
-        ...rest
-      } = fullJob;
+      const { applied_date, job_posting_url, notes, ...rest } = fullJob;
 
       const updatedJob = {
         ...rest,
