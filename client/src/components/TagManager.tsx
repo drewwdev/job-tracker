@@ -7,6 +7,16 @@ type TagManagerProps = {
   jobId: number;
 };
 
+const colorOptions = [
+  { label: "Gray", value: "bg-gray-200 text-gray-800" },
+  { label: "Red", value: "bg-red-200 text-red-800" },
+  { label: "Yellow", value: "bg-yellow-200 text-yellow-800" },
+  { label: "Green", value: "bg-green-200 text-green-800" },
+  { label: "Blue", value: "bg-blue-200 text-blue-800" },
+  { label: "Purple", value: "bg-purple-200 text-purple-800" },
+  { label: "Pink", value: "bg-pink-200 text-pink-800" },
+];
+
 const TagManager = memo(function TagManager({
   tags,
   setTags,
@@ -25,6 +35,11 @@ const TagManager = memo(function TagManager({
       .catch((err) => console.error("Failed to load tags", err));
   }, []);
 
+  if (!Array.isArray(tags)) {
+    console.error("TagManager received invalid tags:", tags);
+    return null;
+  }
+
   const updateTagsInDb = async (updatedNames: string[]) => {
     setLoading(true);
     try {
@@ -33,7 +48,13 @@ const TagManager = memo(function TagManager({
       );
       const fullJob = res.data;
 
-      const { applied_date, job_posting_url, notes, ...rest } = fullJob;
+      const {
+        applied_date,
+        job_posting_url,
+        notes,
+        tags: _ignoredTags,
+        ...rest
+      } = fullJob;
 
       const updatedJob = {
         ...rest,
@@ -48,7 +69,7 @@ const TagManager = memo(function TagManager({
         updatedJob
       );
 
-      setTags(updatedRes.data.tags);
+      setTags(Array.isArray(updatedRes.data.tags) ? updatedRes.data.tags : []);
     } catch (err) {
       console.error("Failed to update tags", err);
     } finally {
@@ -79,6 +100,22 @@ const TagManager = memo(function TagManager({
     updateTagsInDb(updated.map((t) => t.name));
   };
 
+  const updateTagColor = async (tagName: string, newColorClass: string) => {
+    try {
+      await axios.patch(`http://localhost:3000/tags/${tagName}`, {
+        color_class: newColorClass,
+      });
+
+      const updatedJob = await axios.get(
+        `http://localhost:3000/job-applications/${jobId}`
+      );
+
+      setTags(updatedJob.data.tags);
+    } catch (err) {
+      console.error("Failed to update tag color", err);
+    }
+  };
+
   return (
     <div className="mb-5">
       <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -86,17 +123,28 @@ const TagManager = memo(function TagManager({
       </label>
       <div className="flex flex-wrap gap-2 mb-2">
         {tags.map((tag) => (
-          <span
-            key={tag.name}
-            className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-full ${tag.color_class}`}>
-            {tag.name}
+          <div key={tag.name} className="flex items-center gap-2">
+            <span
+              className={`px-3 py-1 text-xs font-medium rounded-full ${tag.color_class}`}>
+              {tag.name}
+            </span>
+            <select
+              value={tag.color_class}
+              onChange={(e) => updateTagColor(tag.name, e.target.value)}
+              className="text-sm rounded border border-gray-300 p-1">
+              {colorOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
             <button
               type="button"
               onClick={() => removeTag(tag.name)}
-              className="ml-2 text-black hover:text-red-600">
+              className="ml-1 text-red-500 hover:text-red-700 text-xs">
               &times;
             </button>
-          </span>
+          </div>
         ))}
       </div>
 

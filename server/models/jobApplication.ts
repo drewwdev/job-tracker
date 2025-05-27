@@ -1,4 +1,5 @@
 import db from "../db";
+import { createTagIfNotExists } from "./tag";
 
 type Tag = { name: string; color_class: string };
 
@@ -33,7 +34,7 @@ type JobApplicationInput = {
   job_posting_url?: string;
   applied_date?: Date;
   notes?: string;
-  tags?: string[]; // these are tag names (just the strings)
+  tags?: string[]; // tag names only
 };
 
 async function getJobApplicationById(
@@ -161,6 +162,8 @@ async function updateJobApplication(
     tags,
   } = data;
 
+  console.log("Received update data:", data);
+
   const client = await db.connect();
 
   try {
@@ -203,14 +206,21 @@ async function updateJobApplication(
     );
 
     if (tags && tags.length > 0) {
+      for (const name of tags) {
+        await createTagIfNotExists(name, "bg-gray-200 text-gray-800");
+      }
+
       const tagResults = await client.query(
         `SELECT id FROM tags WHERE name = ANY($1)`,
         [tags]
       );
       const tagIds = tagResults.rows.map((row) => row.id);
+
       for (const tagId of tagIds) {
         await client.query(
-          `INSERT INTO job_application_tags (job_application_id, tag_id) VALUES ($1, $2)`,
+          `INSERT INTO job_application_tags (job_application_id, tag_id)
+           VALUES ($1, $2)
+           ON CONFLICT DO NOTHING`,
           [id, tagId]
         );
       }
@@ -220,6 +230,7 @@ async function updateJobApplication(
     return await getJobApplicationById(id);
   } catch (err) {
     await client.query("ROLLBACK");
+    console.error("Error updating job application:", err);
     throw new Error("Failed to update job application");
   } finally {
     client.release();

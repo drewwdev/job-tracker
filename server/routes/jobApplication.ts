@@ -82,14 +82,15 @@ router.put("/:id", async (req: Request, res: Response) => {
   }
 
   try {
-    const updatedJobApp = await updateJobApplication(id, result.data);
+    await updateJobApplication(id, result.data);
+    const fullJob = await getJobApplicationById(id);
 
-    if (!updatedJobApp) {
+    if (!fullJob) {
       res.status(404).json({ error: "Job application not found" });
       return;
     }
 
-    res.json(updatedJobApp);
+    res.json(fullJob);
   } catch (err) {
     console.error("Failed to update job application", err);
     res.status(500).json({ error: "Internal server error" });

@@ -28,3 +28,12 @@ export async function createTagIfNotExists(name: string, color_class: string) {
 
   return existing.rows[0];
 }
+
+export async function updateTagColor(name: string, color_class: string) {
+  const result = await db.query(
+    `UPDATE tags SET color_class = $1 WHERE name = $2 RETURNING *`,
+    [color_class, name]
+  );
+
+  return result.rows[0] || null;
+}
