@@ -10,11 +10,11 @@ import { useShowDemo } from "../context/ShowDemoContext";
 type JobApplication = z.infer<typeof jobApplicationListSchema>[number];
 
 export default function Dashboard() {
+  const location = useLocation();
+
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const { showDemoJobs, setShowDemoJobs } = useShowDemo();
-
-  const location = useLocation();
 
   useEffect(() => {
     if (location.state?.source === "real") {

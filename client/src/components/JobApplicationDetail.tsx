@@ -4,7 +4,10 @@ import axios from "axios";
 import TagManager from "./TagManager";
 
 export default function JobApplicationDetail() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
+
   const [job, setJob] = useState<{
     id: number;
     job_title: string;
@@ -16,13 +19,10 @@ export default function JobApplicationDetail() {
     tags?: { name: string; color_class: string }[];
     applied_date?: string;
   } | null>(null);
-
-  const navigate = useNavigate();
-
-  const location = useLocation();
   const [showSuccess, setShowSuccess] = useState<boolean>(
     location.state?.success || false
   );
+  const [clickEdit, setClickEdit] = useState(false);
 
   useEffect(() => {
     if (showSuccess) {
@@ -30,8 +30,6 @@ export default function JobApplicationDetail() {
       return () => clearTimeout(timer);
     }
   }, [showSuccess]);
-
-  const [clickEdit, setClickEdit] = useState(false);
 
   useEffect(() => {
     axios

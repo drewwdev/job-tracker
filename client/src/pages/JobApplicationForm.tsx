@@ -12,6 +12,11 @@ type Tag = {
 };
 
 export default function JobApplicationForm() {
+  const navigate = useNavigate();
+
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
+
   const today = new Date().toISOString().split("T")[0];
 
   const [formData, setFormData] = useState<CreateJobAppInput>({
@@ -33,11 +38,6 @@ export default function JobApplicationForm() {
       .then((res) => setAvailableTags(res.data))
       .catch((err) => console.error("Failed to load tags", err));
   }, []);
-
-  const navigate = useNavigate();
-
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
 
   const handleChange = (
     e: React.ChangeEvent<

@@ -73,6 +73,7 @@ const TagManager = memo(function TagManager({
       setLoading(false);
     }
   };
+
   const addTag = () => {
     const trimmed = newTag.trim().toLowerCase();
     if (!trimmed || tags.some((tag) => tag.name === trimmed)) return;
