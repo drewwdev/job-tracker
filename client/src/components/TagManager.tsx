@@ -27,6 +27,9 @@ const TagManager = memo(function TagManager({
   const [allTags, setAllTags] = useState<
     { name: string; color_class: string }[]
   >([]);
+  const [suggestions, setSuggestions] = useState<
+    { name: string; color_class: string }[]
+  >([]);
 
   useEffect(() => {
     axios
@@ -119,7 +122,7 @@ const TagManager = memo(function TagManager({
         {tags.map((tag) => (
           <div key={tag.name} className="flex items-center gap-2">
             <span
-              className={`px-3 py-1 text-xs font-medium rounded-full ${tag.color_class}`}>
+              className={`px-3 py-1 text-xs font-medium rounded-full border ${tag.color_class} shadow-sm`}>
               {tag.name}
             </span>
             <select
@@ -142,28 +145,49 @@ const TagManager = memo(function TagManager({
         ))}
       </div>
 
-      <div className="flex">
+      <div className="relative w-full mt-2">
         <input
           type="text"
           value={newTag}
-          onChange={(e) => setNewTag(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setNewTag(value);
+            const filtered = allTags.filter(
+              (tag) =>
+                tag.name.includes(value.toLowerCase()) &&
+                !tags.some((t) => t.name === tag.name)
+            );
+            setSuggestions(filtered);
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
               addTag();
+              setSuggestions([]);
             }
           }}
           placeholder="Add tag..."
-          className="flex-1 p-2 border border-gray-300 rounded-l-md focus:ring-blue-500 focus:border-blue-500"
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
           disabled={loading}
         />
-        <button
-          type="button"
-          onClick={addTag}
-          disabled={loading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">
-          Add
-        </button>
+        {suggestions.length > 0 && (
+          <ul className="absolute z-10 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-40 overflow-auto w-full">
+            {suggestions.map((tag) => (
+              <li
+                key={tag.name}
+                onClick={() => {
+                  const updated = [...tags, tag];
+                  updateTagsInDb(updated.map((t) => t.name));
+                  setTags(updated);
+                  setNewTag("");
+                  setSuggestions([]);
+                }}
+                className="cursor-pointer px-3 py-1 hover:bg-blue-100">
+                {tag.name}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
