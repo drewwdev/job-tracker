@@ -62,7 +62,7 @@ export default function JobApplicationForm() {
         "http://localhost:3000/job-applications",
         result.data
       );
-      const newId = response.data.jobApplicationId;
+      const newId = response.data.id;
 
       setSuccess(true);
       setError(null);
