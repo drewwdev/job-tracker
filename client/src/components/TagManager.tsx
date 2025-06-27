@@ -146,7 +146,7 @@ const TagManager = memo(function TagManager({
         ))}
       </div>
 
-      <div className="relative w-full mt-2">
+      <div className="relative w-full mt-2 flex gap-2">
         <input
           type="text"
           value={newTag}
@@ -171,8 +171,18 @@ const TagManager = memo(function TagManager({
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
           disabled={loading}
         />
+        <button
+          type="button"
+          onClick={() => {
+            addTag();
+            setSuggestions([]);
+          }}
+          disabled={loading || newTag.trim() === ""}
+          className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50">
+          Add
+        </button>
         {suggestions.length > 0 && (
-          <ul className="absolute z-10 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-40 overflow-auto w-full">
+          <ul className="absolute z-10 mt-12 bg-white border border-gray-300 rounded-md shadow-lg max-h-40 overflow-auto w-full">
             {suggestions.map((tag) => (
               <li
                 key={tag.name}
